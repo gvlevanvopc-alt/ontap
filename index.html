@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Game Trắc Nghiệm Tin Học - 28 Câu Hỏi</title>
+    <!-- Tailwind CSS for responsive styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .animate-bounce-short {
+            animation: bounce 0.5s ease infinite alternate;
+        }
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-6px); }
+        }
+        .option-btn {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .option-btn:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-indigo-500 selection:text-white pb-6">
+
+    <!-- Header Navbar -->
+    <header class="bg-slate-800/90 backdrop-blur border-b border-slate-700/80 sticky top-0 z-50 px-4 py-3 shadow-md">
+        <div class="max-w-3xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center shadow-lg shadow-indigo-500/30 text-white font-bold text-xl">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-base md:text-lg leading-tight text-white">Trắc Nghiệm Tin Học 6</h1>
+                    <p class="text-xs text-slate-400">Chủ đề Thông tin & Mạng máy tính</p>
+                </div>
+            </div>
+
+            <!-- Realtime Score Badge -->
+            <div class="flex items-center gap-3">
+                <div class="bg-slate-700/80 border border-slate-600 px-3.5 py-1.5 rounded-full flex items-center gap-2 shadow-inner">
+                    <i class="fa-solid fa-star text-amber-400 text-sm"></i>
+                    <span id="header-score" class="font-black text-amber-300 text-lg">0</span>
+                    <span class="text-xs text-slate-400">điểm</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-3xl w-full mx-auto px-4 py-6 flex-grow flex flex-col justify-center">
+
+        <!-- START SCREEN -->
+        <div id="start-screen" class="bg-slate-800/90 border border-slate-700/80 rounded-2xl p-6 md:p-8 shadow-2xl text-center backdrop-blur">
+            <div class="w-20 h-20 bg-indigo-500/10 border border-indigo-500/30 rounded-full flex items-center justify-center mx-auto mb-5 text-indigo-400 text-4xl shadow-inner">
+                <i class="fa-solid fa-gamepad"></i>
+            </div>
+            <h2 class="text-2xl md:text-3xl font-black text-white mb-3">Thử Thách Trắc Nghiệm Tin Học</h2>
+            <p class="text-slate-300 text-base mb-6 max-w-lg mx-auto leading-relaxed">
+                Bộ câu hỏi tổng hợp gồm <strong>28 câu</strong> được sắp xếp tăng dần từ <em>Nhận biết</em>, <em>Thông hiểu</em> đến <em>Vận dụng</em>.
+            </p>
+
+            <div class="grid grid-cols-3 gap-3 mb-8 text-left">
+                <div class="bg-slate-700/40 border border-emerald-500/30 p-3 rounded-xl text-center">
+                    <span class="inline-block px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-semibold text-xs mb-1">Mức 1</span>
+                    <h3 class="text-sm font-bold text-slate-200">Nhận Biết</h3>
+                    <p class="text-xs text-slate-400 mt-0.5">14 câu</p>
+                </div>
+                <div class="bg-slate-700/40 border border-sky-500/30 p-3 rounded-xl text-center">
+                    <span class="inline-block px-2 py-0.5 rounded bg-sky-500/20 text-sky-400 font-semibold text-xs mb-1">Mức 2</span>
+                    <h3 class="text-sm font-bold text-slate-200">Thông Hiểu</h3>
+                    <p class="text-xs text-slate-400 mt-0.5">8 câu</p>
+                </div>
+                <div class="bg-slate-700/40 border border-amber-500/30 p-3 rounded-xl text-center">
+                    <span class="inline-block px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 font-semibold text-xs mb-1">Mức 3</span>
+                    <h3 class="text-sm font-bold text-slate-200">Vận Dụng</h3>
+                    <p class="text-xs text-slate-400 mt-0.5">6 câu</p>
+                </div>
+            </div>
+
+            <button onclick="startGame()" class="w-full md:w-auto px-10 py-4 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-indigo-600 hover:to-pink-600 text-white font-extrabold text-lg rounded-xl shadow-lg shadow-indigo-500/25 transition-all transform hover:-translate-y-0.5 active:translate-y-0">
+                <i class="fa-solid fa-play mr-2"></i> Bắt Đầu Làm Bài
+            </button>
+        </div>
+
+        <!-- QUIZ GAMEPLAY SCREEN -->
+        <div id="quiz-screen" class="hidden flex-col gap-5">
+            <!-- Progress & Stats Bar -->
+            <div class="bg-slate-800/80 border border-slate-700/70 rounded-2xl p-4 shadow-lg backdrop-blur">
+                <div class="flex items-center justify-between text-sm font-medium mb-2">
+                    <div class="flex items-center gap-2">
+                        <span id="level-badge" class="px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                            Nhận biết
+                        </span>
+                        <span class="text-slate-400">|</span>
+                        <span id="question-tracker" class="text-slate-200 font-bold text-base">Câu 1/28</span>
+                    </div>
+                    <div class="text-slate-300 font-semibold">
+                        Điểm: <span id="current-score" class="text-amber-400 font-black text-lg">0</span>
+                    </div>
+                </div>
+                <!-- Progress Bar -->
+                <div class="w-full bg-slate-700/70 h-3 rounded-full overflow-hidden p-0.5 border border-slate-600/30">
+                    <div id="progress-bar" class="bg-gradient-to-r from-indigo-500 to-purple-500 h-full rounded-full transition-all duration-300" style="width: 3.57%;"></div>
+                </div>
+            </div>
+
+            <!-- Question Card -->
+            <div class="bg-slate-800/90 border border-slate-700/80 rounded-2xl p-5 md:p-7 shadow-xl backdrop-blur relative">
+                <!-- Question Text -->
+                <h3 id="question-text" class="text-lg md:text-xl font-bold text-white mb-6 leading-relaxed">
+                    Đang tải câu hỏi...
+                </h3>
+
+                <!-- Options Grid -->
+                <div id="options-container" class="grid grid-cols-1 gap-3.5">
+                    <!-- Option buttons populated by JS -->
+                </div>
+
+                <!-- Explanation Box -->
+                <div id="explanation-box" class="hidden mt-6 p-4 rounded-xl bg-slate-700/60 border border-slate-600/60 text-slate-200 text-sm md:text-base leading-relaxed animate-fade-in">
+                    <div class="flex items-start gap-3">
+                        <div id="explanation-icon" class="text-xl mt-0.5"></div>
+                        <div>
+                            <span id="explanation-title" class="font-bold block mb-1">Giải thích đáp án:</span>
+                            <p id="explanation-text" class="text-slate-300"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Next Question Button -->
+                <div class="mt-6 flex justify-end">
+                    <button id="next-btn" onclick="nextQuestion()" class="hidden px-7 py-3.5 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white font-bold text-base rounded-xl shadow-lg shadow-indigo-600/30 transition-all flex items-center gap-2">
+                        <span>Câu tiếp theo</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- RESULT SCREEN -->
+        <div id="result-screen" class="hidden bg-slate-800/90 border border-slate-700/80 rounded-2xl p-6 md:p-8 shadow-2xl backdrop-blur">
+            <div class="text-center mb-8">
+                <div id="result-icon-bg" class="w-20 h-20 bg-amber-500/10 border border-amber-500/30 rounded-full flex items-center justify-center mx-auto mb-4 text-amber-400 text-4xl">
+                    <i id="result-icon" class="fa-solid fa-trophy"></i>
+                </div>
+                <h2 id="result-title" class="text-2xl md:text-3xl font-black text-white mb-2">Hoàn Thành Bài Thi!</h2>
+                <p id="result-subtitle" class="text-slate-300 text-sm md:text-base">Bạn đã trả lời hết 28 câu hỏi.</p>
+            </div>
+
+            <!-- Score Summary -->
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-8">
+                <div class="bg-slate-700/50 border border-slate-600/50 p-4 rounded-xl text-center">
+                    <span class="text-xs text-slate-400 uppercase font-semibold block mb-1">Tổng điểm</span>
+                    <span id="final-score" class="text-2xl md:text-3xl font-black text-amber-400">0</span>
+                    <span class="text-xs text-slate-400">/ 280 điểm</span>
+                </div>
+                <div class="bg-slate-700/50 border border-slate-600/50 p-4 rounded-xl text-center">
+                    <span class="text-xs text-slate-400 uppercase font-semibold block mb-1">Số câu đúng</span>
+                    <span id="final-correct" class="text-2xl md:text-3xl font-black text-emerald-400">0</span>
+                    <span class="text-xs text-slate-400">/ 28 câu</span>
+                </div>
+                <div class="col-span-2 md:col-span-1 bg-slate-700/50 border border-slate-600/50 p-4 rounded-xl text-center">
+                    <span class="text-xs text-slate-400 uppercase font-semibold block mb-1">Tỉ lệ chính xác</span>
+                    <span id="final-accuracy" class="text-2xl md:text-3xl font-black text-indigo-400">0%</span>
+                </div>
+            </div>
+
+            <!-- Replay Button -->
+            <div class="flex justify-center mb-8">
+                <button onclick="startGame()" class="px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-base rounded-xl shadow-lg shadow-indigo-600/30 transition-all flex items-center gap-2.5 transform hover:-translate-y-0.5 active:translate-y-0">
+                    <i class="fa-solid fa-rotate-right"></i>
+                    <span>Chơi Lại (Xáo Đảo Câu Hỏi)</span>
+                </button>
+            </div>
+
+            <!-- Wrong Answers Review List -->
+            <div id="wrong-answers-container" class="mt-6 pt-6 border-t border-slate-700">
+                <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-circle-xmark text-rose-400"></i>
+                    <span>Danh Sách Câu Trả Lời Chưa Đúng</span>
+                </h3>
+                <div id="wrong-list" class="space-y-4"></div>
+            </div>
+
+            <!-- Study Recommendation List -->
+            <div id="recommendation-container" class="mt-8 bg-indigo-950/40 border border-indigo-500/30 rounded-xl p-5">
+                <h3 class="text-base font-bold text-indigo-300 mb-2 flex items-center gap-2">
+                    <i class="fa-solid fa-lightbulb text-amber-400"></i>
+                    <span>Gợi Ý Phần Kiến Thức Cần Ôn Lại</span>
+                </h3>
+                <div id="recommendation-list" class="text-sm text-slate-300 leading-relaxed space-y-2"></div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center text-xs text-slate-500 py-3">
+        Ứng dụng Trắc nghiệm Học tập Tin học 6 &copy; 2026
+    </footer>
+
+    <script>
+        // Web Audio API Synthesizer for immediate sound cues without external asset loading
+        let audioCtx = null;
+
+        function getAudioContext() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            return audioCtx;
+        }
+
+        function playSound(type) {
+            try {
+                const ctx = getAudioContext();
+                if (!ctx) return;
+
+                if (type === 'correct') {
+                    // Upward chime sequence
+                    const notes = [523.25, 659.25, 783.99]; // C5, E5, G5
+                    notes.forEach((freq, idx) => {
+                        const osc = ctx.createOscillator();
+                        const gain = ctx.createGain();
+                        osc.type = 'triangle';
+                        osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.08);
+                        gain.gain.setValueAtTime(0.15, ctx.currentTime + idx * 0.08);
+                        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.08 + 0.2);
+                        osc.connect(gain);
+                        gain.connect(ctx.destination);
+                        osc.start(ctx.currentTime + idx * 0.08);
+                        osc.stop(ctx.currentTime + idx * 0.08 + 0.2);
+                    });
+                } else if (type === 'wrong') {
+                    // Low buzzer tone
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(180, ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(110, ctx.currentTime + 0.3);
+                    gain.gain.setValueAtTime(0.2, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(ctx.currentTime);
+                    osc.stop(ctx.currentTime + 0.3);
+                }
+            } catch (e) {
+                console.log("Audio playback error:", e);
+            }
+        }
+
+        // Complete 28 Questions Question Bank categorized into 3 levels
+        const rawQuestionBank = {
+            level1: [ // 14 câu Nhận biết
+                {
+                    text: "Phát biểu nào sau đây mô tả đúng về thông tin?",
+                    options: [
+                        "Là những con số được nhập vào máy tính.",
+                        "Là những gì đem lại sự hiểu biết cho con người.",
+                        "Là các thiết bị dùng để lưu trữ dữ liệu.",
+                        "Là các tệp được lưu trong máy tính."
+                    ],
+                    correct: 1,
+                    explanation: "Thông tin là tất cả những gì mang lại cho con người sự hiểu biết về thế giới xung quanh và về chính bản thân mình.",
+                    topic: "Khái niệm Thông tin & Dữ liệu"
+                },
+                {
+                    text: "Hãy chọn thứ tự đúng của các bước cơ bản trong xử lí thông tin?",
+                    options: [
+                        "Xử lí → Thu nhận → Truyền → Lưu trữ thông tin.",
+                        "Thu nhận → Xử lí → Lưu trữ → Truyền thông tin.",
+                        "Lưu trữ → Thu nhận → Xử lí → Truyền thông tin.",
+                        "Truyền → Xử lí → Thu nhận → Lưu trữ thông tin."
+                    ],
+                    correct: 1,
+                    explanation: "Sơ đồ chuẩn của quá trình xử lí thông tin: Thu nhận thông tin → Xử lí thông tin → Lưu trữ thông tin → Truyền thông tin.",
+                    topic: "Quá trình Xử lý Thông tin"
+                },
+                {
+                    text: "Khi em lưu lại một hình trong máy tính, thì máy tính đang thực hiện thao tác nào trong quá trình xử lí thông tin?",
+                    options: [
+                        "Thu nhận thông tin",
+                        "Lưu trữ thông tin",
+                        "Xử lí thông tin",
+                        "Truyền thông tin"
+                    ],
+                    correct: 1,
+                    explanation: "Thao tác ghi file/hình ảnh vào bộ nhớ máy tính thuộc bước Lưu trữ thông tin.",
+                    topic: "Quá trình Xử lý Thông tin"
+                },
+                {
+                    text: "Hoạt động với máy tính nào sau đây giúp em trong học tập?",
+                    options: [
+                        "Tìm kiếm thông tin trên Internet.",
+                        "Chơi trò chơi trên máy tính.",
+                        "Xem phim trên máy tính.",
+                        "Nhắn tin và chat với bạn."
+                    ],
+                    correct: 0,
+                    explanation: "Tra cứu thông tin bài học trên Internet hỗ trợ trực tiếp và hiệu quả cho việc học tập.",
+                    topic: "Ứng dụng của Máy tính"
+                },
+                {
+                    text: "Chức năng của bộ nhớ máy tính là gì?",
+                    options: [
+                        "Thu nhận thông tin.",
+                        "Lưu trữ thông tin.",
+                        "Xử lí thông tin.",
+                        "Truyền thông tin."
+                    ],
+                    correct: 1,
+                    explanation: "Bộ nhớ máy tính có chức năng chính là lưu trữ dữ liệu và thông tin.",
+                    topic: "Thành phần Máy tính"
+                },
+                {
+                    text: "Màn hình máy tính là ví dụ về loại thiết bị nào của máy tính?",
+                    options: [
+                        "Bộ nhớ",
+                        "Thiết bị lưu trữ",
+                        "Thiết bị vào",
+                        "Thiết bị ra"
+                    ],
+                    correct: 3,
+                    explanation: "Màn hình hiển thị kết quả xử lí ra cho người dùng nhìn thấy nên là thiết bị ra (Output).",
+                    topic: "Thành phần Máy tính"
+                },
+                {
+                    text: "Thông tin trong máy tính được biểu diễn dưới dạng nào?",
+                    options: [
+                        "Văn bản, hình ảnh, số và âm thanh",
+                        "Hình ảnh, số",
+                        "Âm thanh, hình ảnh",
+                        "Văn bản, số, hình ảnh"
+                    ],
+                    correct: 0,
+                    explanation: "Máy tính biểu diễn đa dạng các dạng thông tin bao gồm văn bản, hình ảnh, âm thanh và các con số.",
+                    topic: "Biểu diễn Thông tin"
+                },
+                {
+                    text: "Thông tin khi đưa vào máy tính, chúng được biến đổi thành dạng chung đó là?",
+                    options: [
+                        "Văn bản",
+                        "Hình ảnh",
+                        "Dãy bit",
+                        "Âm thanh"
+                    ],
+                    correct: 2,
+                    explanation: "Mọi thông tin khi vào máy tính đều được chuyển đổi thành dạng chung là dãy bit (kí hiệu 0 và 1).",
+                    topic: "Biểu diễn Thông tin"
+                },
+                {
+                    text: "Đơn vị đo dung lượng thông tin nhỏ nhất là gì?",
+                    options: [
+                        "Bit.",
+                        "Megabyte.",
+                        "Kilobyte.",
+                        "Byte."
+                    ],
+                    correct: 0,
+                    explanation: "Bit (Binary Digit) là đơn vị nhỏ nhất để đo dung lượng thông tin trong máy tính.",
+                    topic: "Dung lượng Lưu trữ"
+                },
+                {
+                    text: "Thứ tự tăng dần về dung lượng của các đơn vị đo thông tin nào sau đây là đúng?",
+                    options: [
+                        "GB, MB, KB, Byte",
+                        "Byte, KB, MB, GB",
+                        "KB, Byte, GB, MB",
+                        "MB, GB, Byte, KB"
+                    ],
+                    correct: 1,
+                    explanation: "Thứ tự tăng dần về dung lượng đo thông tin chuẩn là: Byte < KB < MB < GB.",
+                    topic: "Dung lượng Lưu trữ"
+                },
+                {
+                    text: "Mạng máy tính gồm các thành phần cơ bản nào?",
+                    options: [
+                        "Thiết bị đầu cuối, thiết bị kết nối và phần mềm mạng.",
+                        "Thiết bị đầu cuối và thiết bị kết nối.",
+                        "Máy tính và thiết bị kết nối.",
+                        "Máy tính, thiết bị đầu cuối và thiết bị kết nối."
+                    ],
+                    correct: 0,
+                    explanation: "Mạng máy tính gồm 3 thành phần chính: thiết bị đầu cuối, thiết bị kết nối và phần mềm mạng.",
+                    topic: "Mạng Máy tính"
+                },
+                {
+                    text: "Điện thoại thông minh, máy tính để bàn, máy tính xách tay thuộc thành phần nào của mạng máy tính?",
+                    options: [
+                        "Thiết bị đầu cuối.",
+                        "Thiết bị lưu trữ.",
+                        "Thiết bị kết nối.",
+                        "Phần mềm mạng."
+                    ],
+                    correct: 0,
+                    explanation: "Điện thoại, máy tính để bàn, laptop đóng vai trò là các thiết bị đầu cuối gửi và nhận thông tin.",
+                    topic: "Mạng Máy tính"
+                },
+                {
+                    text: "Lợi ích nào sau đây là lợi ích của mạng máy tính?",
+                    options: [
+                        "Giúp các máy tính không cần sử dụng điện.",
+                        "Giúp máy tính tự động sửa chữa khi bị hỏng.",
+                        "Giúp người dùng trao đổi thông tin và chia sẻ tài nguyên.",
+                        "Giúp máy tính hoạt động mà không cần hệ điều hành."
+                    ],
+                    correct: 2,
+                    explanation: "Mạng máy tính giúp người dùng dễ dàng trao đổi dữ liệu, thông tin và chia sẻ tài nguyên dùng chung.",
+                    topic: "Mạng Máy tính"
+                },
+                {
+                    text: "Thiết bị/kết nối nào sau đây thuộc kết nối không dây?",
+                    options: [
+                        "Máy tính xách tay",
+                        "Bộ chuyển mạch (Switch)",
+                        "Tai nghe không dây",
+                        "Máy tính để bàn"
+                    ],
+                    correct: 2,
+                    explanation: "Tai nghe không dây truyền nhận dữ liệu qua sóng vô tuyến (Bluetooth) không cần dây dẫn.",
+                    topic: "Mạng Không Dây"
+                }
+            ],
+            level2: [ // 8 câu Thông hiểu
+                {
+                    text: "Trong các trường hợp sau, đâu là vật mang thông tin?",
+                    options: [
+                        "Nội dung bài báo.",
+                        "Tiếng chuông báo thức.",
+                        "Một quyển sách chứa bài học.",
+                        "Ý nghĩa của biển báo giao thông."
+                    ],
+                    correct: 2,
+                    explanation: "Quyển sách là vật thể vật lý chứa đựng dữ liệu, do đó là vật mang thông tin.",
+                    topic: "Vật mang Thông tin"
+                },
+                {
+                    text: "Đọc tình huống: Trên bảng thông báo của trường có dòng chữ: 'Ngày mai học sinh nghỉ học do mưa lớn'. Phát biểu nào dưới đây là ĐÚNG?",
+                    options: [
+                        "Dòng chữ 'Ngày mai học sinh nghỉ học do mưa lớn' là vật mang tin.",
+                        "Tấm bảng thông báo là dữ liệu.",
+                        "Thông tin và vật mang thông tin là hai khái niệm hoàn toàn giống nhau.",
+                        "Các chữ 'Ngày mai học sinh nghỉ học do mưa lớn' là dữ liệu."
+                    ],
+                    correct: 3,
+                    explanation: "Các ký tự/chữ viết ghi lại thông tin chính là dữ liệu, còn tấm bảng thông báo mới là vật mang tin.",
+                    topic: "Phân biệt Dữ liệu & Vật mang tin"
+                },
+                {
+                    text: "Em đang nghe nhạc trên Tivi là hoạt động nào của quá trình xử lí thông tin?",
+                    options: [
+                        "Thu nhận thông tin",
+                        "Lưu trữ thông tin",
+                        "Xử lí thông tin",
+                        "Truyền thông tin"
+                    ],
+                    correct: 0,
+                    explanation: "Nghe nhạc từ Tivi là việc con người dùng thính giác để thu nhận thông tin vào não bộ.",
+                    topic: "Quá trình Xử lý Thông tin"
+                },
+                {
+                    text: "Vì sao máy tính được xem là công cụ hiệu quả để xử lí thông tin?",
+                    options: [
+                        "Vì máy tính có thể thay thế hoàn toàn con người trong mọi công việc.",
+                        "Vì máy tính có khả năng xử lí nhanh, chính xác, lưu trữ được nhiều thông tin và dễ dàng trao đổi thông tin.",
+                        "Vì máy tính chỉ có thể xử lí các thông tin dạng văn bản.",
+                        "Vì máy tính không cần con người cung cấp dữ liệu."
+                    ],
+                    correct: 1,
+                    explanation: "Tốc độ xử lí cao, độ chính xác tuyệt đối, dung lượng lưu trữ khổng lồ giúp máy tính xử lí thông tin hiệu quả.",
+                    topic: "Ưu điểm của Máy tính"
+                },
+                {
+                    text: "Một 'GB' xấp xỉ bao nhiêu byte?",
+                    options: [
+                        "Một nghìn byte",
+                        "Một triệu byte",
+                        "Một tỉ byte",
+                        "Một nghìn tỉ byte"
+                    ],
+                    correct: 2,
+                    explanation: "1 GB (Gigabyte) xấp xỉ 1 tỉ byte (khoảng 1.073.741.824 bytes).",
+                    topic: "Dung lượng Lưu trữ"
+                },
+                {
+                    text: "Vì sao máy tính có thể biểu diễn thông tin chỉ bằng hai kí hiệu 0 và 1?",
+                    options: [
+                        "Vì máy tính chỉ có thể xử lí các số tự nhiên.",
+                        "Vì máy tính sử dụng hai trạng thái tín hiệu tương ứng với 0 và 1 để biểu diễn thông tin.",
+                        "Vì mọi thông tin trong cuộc sống đều chỉ có hai giá trị.",
+                        "Vì hai kí hiệu 0 và 1 dễ viết hơn các chữ cái."
+                    ],
+                    correct: 1,
+                    explanation: "Các linh kiện điện tử máy tính hoạt động dựa trên 2 trạng thái vật lý (có điện / ngắt điện) tương ứng với 0 và 1.",
+                    topic: "Biểu diễn Thông tin"
+                },
+                {
+                    text: "Thiết bị nào sau đây không phải là thiết bị đầu cuối?",
+                    options: [
+                        "Máy tính.",
+                        "Bộ định tuyến.",
+                        "Máy in.",
+                        "Máy ảnh."
+                    ],
+                    correct: 1,
+                    explanation: "Bộ định tuyến (Router) là thiết bị kết nối mạng, không phải là thiết bị đầu cuối.",
+                    topic: "Mạng Máy tính"
+                },
+                {
+                    text: "Trong các lựa chọn sau, đâu là một ví dụ về mạng máy tính?",
+                    options: [
+                        "Một máy tính cá nhân không kết nối với thiết bị nào khác.",
+                        "Một nhóm máy tính trong phòng tin học được kết nối với nhau để chia sẻ dữ liệu.",
+                        "Một chiếc máy tính đang chạy phần mềm soạn thảo văn bản.",
+                        "Một chiếc USB đang lưu trữ tài liệu."
+                    ],
+                    correct: 1,
+                    explanation: "Mạng máy tính là tập hợp các máy tính kết nối với nhau để trao đổi dữ liệu và chia sẻ tài nguyên.",
+                    topic: "Mạng Máy tính"
+                }
+            ],
+            level3: [ // 6 câu Vận dụng
+                {
+                    text: "Quan sát tấm vé xe/xem phim, theo em phát biểu nào sau đây là đúng?",
+                    options: [
+                        "Tấm vé là dữ liệu, những chữ và số là thông tin.",
+                        "Tấm vé là thông tin, chữ và số là dữ liệu.",
+                        "Những con số trong tấm vé là thông tin.",
+                        "Tấm vé là vật mang tin, chữ và số là dữ liệu."
+                    ],
+                    correct: 3,
+                    explanation: "Tấm vé giấy đóng vai trò là vật mang tin, còn toàn bộ chữ và số in trên đó chính là dữ liệu.",
+                    topic: "Phân biệt Vật mang tin & Dữ liệu"
+                },
+                {
+                    text: "Trước khi đi học, An xem dự báo thời tiết và biết hôm nay có khả năng mưa lớn nên mang theo áo mưa. Ví dụ này cho thấy thông tin có tác dụng gì?",
+                    options: [
+                        "Giúp An giải trí.",
+                        "Giúp An đưa ra quyết định phù hợp.",
+                        "Giúp An tạo dữ liệu mới.",
+                        "Giúp An thay đổi thời tiết."
+                    ],
+                    correct: 1,
+                    explanation: "Thông tin dự báo giúp An nắm bắt tình hình và đưa ra quyết định mang theo áo mưa.",
+                    topic: "Vai trò của Thông tin"
+                },
+                {
+                    text: "Trong giờ học, giáo viên thông báo ngày mai lớp sẽ kiểm tra môn Tin học. Thông tin này có ý nghĩa gì đối với học sinh?",
+                    options: [
+                        "Giúp học sinh biết tên giáo viên.",
+                        "Giúp học sinh chủ động ôn tập và chuẩn bị bài tốt.",
+                        "Giúp học sinh biết số lượng máy tính trong phòng học.",
+                        "Giúp học sinh biết thời khóa biểu của các lớp khác."
+                    ],
+                    correct: 1,
+                    explanation: "Thông tin kiểm tra giúp học sinh nhận thức nhiệm vụ và chủ động chuẩn bị bài tốt hơn.",
+                    topic: "Vai trò của Thông tin"
+                },
+                {
+                    text: "Một giáo viên có danh sách điểm của 200 học sinh và cần tính điểm trung bình, tìm học sinh có điểm cao nhất. Vì sao sử dụng máy tính là phù hợp?",
+                    options: [
+                        "Máy tính có thể xử lí nhanh một lượng lớn dữ liệu và cho kết quả chính xác.",
+                        "Máy tính có thể tự quyết định mọi vấn đề thay cho giáo viên.",
+                        "Máy tính không cần dữ liệu đầu vào vẫn có thể xử lí.",
+                        "Máy tính chỉ dùng để lưu trữ dữ liệu."
+                    ],
+                    correct: 0,
+                    explanation: "Ưu điểm của máy tính là khả năng xử lí dữ liệu lớn với tốc độ cực nhanh và độ chính xác tuyệt đối.",
+                    topic: "Ưu điểm của Máy tính"
+                },
+                {
+                    text: "Một giáo viên thường xuyên di chuyển trong lớp học và sử dụng máy tính xách tay để trình chiếu bài giảng. Loại mạng nào sau đây thuận tiện hơn?",
+                    options: [
+                        "Mạng có dây vì phải kéo cáp theo giáo viên.",
+                        "Mạng không dây vì giáo viên có thể kết nối mạng ở nhiều vị trí trong phạm vi phủ sóng.",
+                        "Không cần kết nối mạng trong mọi trường hợp.",
+                        "Mạng có dây vì không cần thiết bị kết nối."
+                    ],
+                    correct: 1,
+                    explanation: "Mạng không dây (Wi-Fi) cho phép kết nối linh hoạt ở nhiều vị trí mà không bị hạn chế bởi dây cáp.",
+                    topic: "Mạng Không Dây"
+                },
+                {
+                    text: "Một trường học tổ chức hoạt động học tập tại nhiều khu vực trong khuôn viên. Học sinh cần sử dụng laptop truy cập tài liệu trực tuyến. Mạng không dây có ưu điểm gì trong tình huống này?",
+                    options: [
+                        "Giúp học sinh di chuyển trong vùng phủ sóng mà vẫn có thể kết nối mạng.",
+                        "Giúp học sinh không cần sử dụng máy tính.",
+                        "Giúp mọi thiết bị truy cập mạng ở bất cứ đâu, kể cả ngoài vùng phủ sóng.",
+                        "Giúp loại bỏ hoàn toàn nguy cơ mất an toàn thông tin."
+                    ],
+                    correct: 0,
+                    explanation: "Mạng không dây mang lại sự tiện lợi vượt trội nhờ khả năng duy trì kết nối khi di chuyển trong khu vực phát sóng.",
+                    topic: "Mạng Không Dây"
+                }
+            ]
+        };
+
+        let activeQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let userAnswers = [];
+        let canAnswer = true;
+
+        // Shuffle utility
+        function shuffleArray(array) {
+            const arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        // Build question queue with preserved difficulty ordering
+        function buildGameQuestions() {
+            const lvl1 = shuffleArray(rawQuestionBank.level1);
+            const lvl2 = shuffleArray(rawQuestionBank.level2);
+            const lvl3 = shuffleArray(rawQuestionBank.level3);
+
+            const prepareQuestionObj = (q, diffLabel) => {
+                const optionsObj = q.options.map((opt, idx) => ({
+                    text: opt,
+                    isCorrect: idx === q.correct
+                }));
+                const shuffledOpts = shuffleArray(optionsObj);
+                const newCorrectIdx = shuffledOpts.findIndex(o => o.isCorrect);
+
+                return {
+                    text: q.text,
+                    options: shuffledOpts.map(o => o.text),
+                    correct: newCorrectIdx,
+                    explanation: q.explanation,
+                    topic: q.topic,
+                    difficulty: diffLabel
+                };
+            };
+
+            const preparedLvl1 = lvl1.map(q => prepareQuestionObj(q, "Nhận biết"));
+            const preparedLvl2 = lvl2.map(q => prepareQuestionObj(q, "Thông hiểu"));
+            const preparedLvl3 = lvl3.map(q => prepareQuestionObj(q, "Vận dụng"));
+
+            return [...preparedLvl1, ...preparedLvl2, ...preparedLvl3];
+        }
+
+        function startGame() {
+            getAudioContext(); // Initialize audio context on click
+            activeQuestions = buildGameQuestions();
+            currentQuestionIndex = 0;
+            score = 0;
+            userAnswers = [];
+            canAnswer = true;
+
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            document.getElementById('quiz-screen').classList.add('flex');
+
+            updateHeaderScore();
+            renderQuestion();
+        }
+
+        function updateHeaderScore() {
+            document.getElementById('header-score').textContent = score;
+            document.getElementById('current-score').textContent = score;
+        }
+
+        function renderQuestion() {
+            canAnswer = true;
+            const q = activeQuestions[currentQuestionIndex];
+            const totalQ = activeQuestions.length; // 28
+            const currentNum = currentQuestionIndex + 1;
+
+            // Tracker & Progress
+            document.getElementById('question-tracker').textContent = `Câu ${currentNum}/${totalQ}`;
+            const progressPercent = (currentNum / totalQ) * 100;
+            document.getElementById('progress-bar').style.width = `${progressPercent}%`;
+
+            // Badge color
+            const levelBadge = document.getElementById('level-badge');
+            levelBadge.textContent = q.difficulty;
+            if (q.difficulty === "Nhận biết") {
+                levelBadge.className = "px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
+            } else if (q.difficulty === "Thông hiểu") {
+                levelBadge.className = "px-2.5 py-1 rounded-md text-xs font-bold bg-sky-500/20 text-sky-300 border border-sky-500/30";
+            } else {
+                levelBadge.className = "px-2.5 py-1 rounded-md text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30";
+            }
+
+            // Text
+            document.getElementById('question-text').textContent = `${currentNum}. ${q.text}`;
+
+            // Reset UI components
+            document.getElementById('explanation-box').classList.add('hidden');
+            document.getElementById('next-btn').classList.add('hidden');
+
+            // Options
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+
+            const prefixes = ['A', 'B', 'C', 'D'];
+            q.options.forEach((optText, idx) => {
+                const btn = document.createElement('button');
+                btn.className = `option-btn w-full text-left p-4 rounded-xl bg-slate-700/50 hover:bg-slate-700 border border-slate-600/60 text-slate-100 flex items-start gap-3.5 group`;
+                btn.onclick = () => handleSelectAnswer(idx);
+
+                btn.innerHTML = `
+                    <span class="opt-prefix w-8 h-8 rounded-lg bg-slate-800 border border-slate-600 text-slate-300 font-bold text-sm flex items-center justify-center flex-shrink-0 group-hover:border-indigo-400 group-hover:text-indigo-300 transition-colors">
+                        ${prefixes[idx]}
+                    </span>
+                    <span class="opt-text text-base md:text-lg leading-snug mt-0.5 font-medium">${optText}</span>
+                `;
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function handleSelectAnswer(selectedIndex) {
+            if (!canAnswer) return;
+            canAnswer = false;
+
+            const q = activeQuestions[currentQuestionIndex];
+            const isCorrect = selectedIndex === q.correct;
+            const optionButtons = document.querySelectorAll('.option-btn');
+
+            // Play synthesized audio tone
+            if (isCorrect) {
+                playSound('correct');
+                score += 10;
+                updateHeaderScore();
+            } else {
+                playSound('wrong');
+            }
+
+            // Save user log
+            userAnswers.push({
+                questionText: q.text,
+                selectedOption: q.options[selectedIndex],
+                correctOption: q.options[q.correct],
+                isCorrect: isCorrect,
+                explanation: q.explanation,
+                topic: q.topic,
+                difficulty: q.difficulty
+            });
+
+            // Update button styles
+            optionButtons.forEach((btn, idx) => {
+                btn.disabled = true;
+                const prefixSpan = btn.querySelector('.opt-prefix');
+
+                if (idx === q.correct) {
+                    // Highlight correct answer GREEN
+                    btn.className = "option-btn w-full text-left p-4 rounded-xl bg-emerald-950/90 border-2 border-emerald-500 text-emerald-100 flex items-start gap-3.5 shadow-lg shadow-emerald-900/30";
+                    prefixSpan.className = "opt-prefix w-8 h-8 rounded-lg bg-emerald-600 text-white font-black text-sm flex items-center justify-center flex-shrink-0";
+                } else if (idx === selectedIndex && !isCorrect) {
+                    // Highlight selected wrong answer RED
+                    btn.className = "option-btn w-full text-left p-4 rounded-xl bg-rose-950/90 border-2 border-rose-500 text-rose-100 flex items-start gap-3.5 shadow-lg shadow-rose-900/30";
+                    prefixSpan.className = "opt-prefix w-8 h-8 rounded-lg bg-rose-600 text-white font-black text-sm flex items-center justify-center flex-shrink-0";
+                } else {
+                    // Dim unselected options
+                    btn.className = "option-btn w-full text-left p-4 rounded-xl bg-slate-800/40 border border-slate-700/40 text-slate-500 opacity-50 flex items-start gap-3.5";
+                }
+            });
+
+            // Display Explanation Box
+            const expBox = document.getElementById('explanation-box');
+            const expIcon = document.getElementById('explanation-icon');
+            const expTitle = document.getElementById('explanation-title');
+            const expText = document.getElementById('explanation-text');
+
+            if (isCorrect) {
+                expIcon.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-400"></i>';
+                expTitle.className = "font-bold text-emerald-300 block mb-1";
+                expTitle.textContent = "Chính xác!";
+            } else {
+                expIcon.innerHTML = '<i class="fa-solid fa-circle-xmark text-rose-400"></i>';
+                expTitle.className = "font-bold text-rose-300 block mb-1";
+                expTitle.textContent = "Chưa chính xác!";
+            }
+            expText.textContent = q.explanation;
+            expBox.classList.remove('hidden');
+
+            // Show Next Button
+            const nextBtn = document.getElementById('next-btn');
+            if (currentQuestionIndex === activeQuestions.length - 1) {
+                nextBtn.querySelector('span').textContent = "Xem Kết Quả";
+            } else {
+                nextBtn.querySelector('span').textContent = "Câu tiếp theo";
+            }
+            nextBtn.classList.remove('hidden');
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < activeQuestions.length) {
+                renderQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('flex');
+            document.getElementById('result-screen').classList.remove('hidden');
+
+            const totalQuestions = activeQuestions.length; // 28
+            const correctCount = userAnswers.filter(a => a.isCorrect).length;
+            const accuracy = Math.round((correctCount / totalQuestions) * 100);
+
+            document.getElementById('final-score').textContent = score;
+            document.getElementById('final-correct').textContent = correctCount;
+            document.getElementById('final-accuracy').textContent = `${accuracy}%`;
+
+            const resIconBg = document.getElementById('result-icon-bg');
+            const resIcon = document.getElementById('result-icon');
+            const resTitle = document.getElementById('result-title');
+            const resSubtitle = document.getElementById('result-subtitle');
+
+            if (accuracy >= 85) {
+                resIconBg.className = "w-20 h-20 bg-amber-500/20 border border-amber-500/40 rounded-full flex items-center justify-center mx-auto mb-4 text-amber-400 text-4xl animate-bounce-short";
+                resIcon.className = "fa-solid fa-trophy";
+                resTitle.textContent = "Xuất Sắc! 🎉";
+                resSubtitle.textContent = `Bạn đã đạt ${score}/280 điểm. Nắm rất vững kiến thức Tin học!`;
+                confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+            } else if (accuracy >= 60) {
+                resIconBg.className = "w-20 h-20 bg-indigo-500/20 border border-indigo-500/40 rounded-full flex items-center justify-center mx-auto mb-4 text-indigo-400 text-4xl";
+                resIcon.className = "fa-solid fa-medal";
+                resTitle.textContent = "Kết Quả Khá Good! 👍";
+                resSubtitle.textContent = `Bạn trả lời đúng ${correctCount}/${totalQuestions} câu. Hãy ôn lại một số câu chưa đúng bên dưới!`;
+            } else {
+                resIconBg.className = "w-20 h-20 bg-slate-700 border border-slate-600 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-300 text-4xl";
+                resIcon.className = "fa-solid fa-book-open";
+                resTitle.textContent = "Cần Cố Gắng Hơn! 💪";
+                resSubtitle.textContent = `Bạn đạt ${score}/280 điểm. Hãy xem kĩ danh sách câu sai để củng cố lại nhé!`;
+            }
+
+            // Wrong answers list
+            const wrongAnswers = userAnswers.filter(a => !a.isCorrect);
+            const wrongContainer = document.getElementById('wrong-answers-container');
+            const wrongList = document.getElementById('wrong-list');
+
+            if (wrongAnswers.length === 0) {
+                wrongContainer.classList.add('hidden');
+            } else {
+                wrongContainer.classList.remove('hidden');
+                wrongList.innerHTML = '';
+
+                wrongAnswers.forEach((item) => {
+                    const card = document.createElement('div');
+                    card.className = "bg-slate-700/40 border border-slate-600/50 rounded-xl p-4 text-sm text-slate-200";
+                    card.innerHTML = `
+                        <div class="font-bold text-white mb-2 text-base">${item.questionText}</div>
+                        <div class="space-y-1 mb-2.5">
+                            <div class="text-rose-400 font-medium"><i class="fa-solid fa-xmark mr-1.5"></i>Đã chọn: <span class="underline">${item.selectedOption}</span></div>
+                            <div class="text-emerald-400 font-medium"><i class="fa-solid fa-check mr-1.5"></i>Đáp án đúng: <span class="font-semibold">${item.correctOption}</span></div>
+                        </div>
+                        <div class="text-xs bg-slate-800/80 p-3 rounded-lg border border-slate-700 text-slate-300 leading-relaxed">
+                            <strong class="text-amber-300">Giải thích:</strong> ${item.explanation}
+                        </div>
+                    `;
+                    wrongList.appendChild(card);
+                });
+            }
+
+            // Study Recommendations
+            const recommendationList = document.getElementById('recommendation-list');
+            recommendationList.innerHTML = '';
+
+            if (wrongAnswers.length === 0) {
+                recommendationList.innerHTML = `<p class="text-emerald-300 font-semibold">Chúc mừng! Bạn đạt điểm tuyệt đối 28/28 câu. Bạn đã sẵn sàng cho mọi kì thi Tin học!</p>`;
+            } else {
+                const missedTopics = [...new Set(wrongAnswers.map(a => a.topic))];
+                missedTopics.forEach(topic => {
+                    const item = document.createElement('div');
+                    item.className = "flex items-start gap-2.5";
+                    item.innerHTML = `
+                        <i class="fa-solid fa-angle-right text-indigo-400 mt-1"></i>
+                        <span>Ôn tập kĩ chuyên đề: <strong class="text-indigo-200">${topic}</strong> trong SGK Tin học.</span>
+                    `;
+                    recommendationList.appendChild(item);
+                });
+            }
+        }
+    </script>
+</body>
+</html>
